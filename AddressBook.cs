@@ -1,4 +1,6 @@
-﻿namespace AddressBookUsingLambda
+﻿using System.Collections.Generic;
+
+namespace AddressBookUsingLambda
 {
     public class AddressBook
     {
@@ -17,6 +19,14 @@
         }
 
         private List<ContactDetails> Contacts = new List<ContactDetails>();
+
+        public AddressBook()
+        {
+            string path = @"C:\Users\Public\Documents\AddressBook.json";
+
+            if(File.Exists(path))
+                Contacts = AddressBookJsonFile.Read<ContactDetails>();
+        }
 
         private void ShowContacts()
         {
@@ -54,6 +64,7 @@
 
             var newContact = new ContactDetails(name, city, state, zip, number, email);
             Contacts.Add(newContact);
+            AddressBookJsonFile.Write(Contacts);
 
             Console.WriteLine("\nContact Added!!");
         }
@@ -84,6 +95,8 @@
             Console.Write(" Zip (old): {0} (new) : (Leave blank to keep it same) ", Contacts[index].Zip); var zip = Console.ReadLine(); Contacts[index].Zip = (zip != "") ? zip : Contacts[index].Zip;
             Console.Write(" Phone (old): {0} (new) : (Leave blank to keep it same) ", Contacts[index].PhoneNumber); var phone = Console.ReadLine(); Contacts[index].PhoneNumber = (phone != "") ? phone : Contacts[index].PhoneNumber;
             Console.Write(" E-mail (old): {0} (new) : (Leave blank to keep it same) ", Contacts[index].Email); var email = Console.ReadLine(); Contacts[index].Email = (email != "") ? email : Contacts[index].Email;
+
+            AddressBookJsonFile.Write(Contacts);
         }
 
         public void DeleteContact()
@@ -98,6 +111,8 @@
 
             Contacts.RemoveAt(index);
             Console.WriteLine("\nContact Removed!!");
+
+            AddressBookJsonFile.Write(Contacts);
         }
 
         public void SearchContactsByStateCity()
