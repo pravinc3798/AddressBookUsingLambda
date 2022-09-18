@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using CsvHelper.Configuration;
+using System.Collections.Generic;
 
 namespace AddressBookUsingLambda
 {
     public class AddressBook
     {
-        private class ContactDetails
+        public class ContactDetails
         {
             public string FullName, City, State, Zip, PhoneNumber, Email;
             public ContactDetails(string fullName, string city, string state, string zip, string phoneNumber, string email)
@@ -16,16 +17,17 @@ namespace AddressBookUsingLambda
                 PhoneNumber = phoneNumber;
                 Email = email;
             }
+
         }
 
         private List<ContactDetails> Contacts = new List<ContactDetails>();
 
         public AddressBook()
         {
-            string path = @"C:\Users\Public\Documents\AddressBook.json";
+            string path = @"C:\Users\Public\Documents\AddressBook.csv";
 
-            if(File.Exists(path))
-                Contacts = AddressBookJsonFile.Read<ContactDetails>();
+            if (File.Exists(path))
+                Contacts = AddressBookCsvFile.Read<ContactDetails>();
         }
 
         private void ShowContacts()
@@ -64,7 +66,7 @@ namespace AddressBookUsingLambda
 
             var newContact = new ContactDetails(name, city, state, zip, number, email);
             Contacts.Add(newContact);
-            AddressBookJsonFile.Write(Contacts);
+            AddressBookCsvFile.Write(Contacts);
 
             Console.WriteLine("\nContact Added!!");
         }
@@ -96,7 +98,7 @@ namespace AddressBookUsingLambda
             Console.Write(" Phone (old): {0} (new) : (Leave blank to keep it same) ", Contacts[index].PhoneNumber); var phone = Console.ReadLine(); Contacts[index].PhoneNumber = (phone != "") ? phone : Contacts[index].PhoneNumber;
             Console.Write(" E-mail (old): {0} (new) : (Leave blank to keep it same) ", Contacts[index].Email); var email = Console.ReadLine(); Contacts[index].Email = (email != "") ? email : Contacts[index].Email;
 
-            AddressBookJsonFile.Write(Contacts);
+            AddressBookCsvFile.Write(Contacts);
         }
 
         public void DeleteContact()
@@ -112,7 +114,7 @@ namespace AddressBookUsingLambda
             Contacts.RemoveAt(index);
             Console.WriteLine("\nContact Removed!!");
 
-            AddressBookJsonFile.Write(Contacts);
+            AddressBookCsvFile.Write(Contacts);
         }
 
         public void SearchContactsByStateCity()
